@@ -120,6 +120,22 @@ Parameters:
     Description: "Allowed CIDR block for  webserver access"
     Type: String
 Resources:
+  VPCStack:
+    Type: 'AWS::CloudFormation::Stack'
+    Properties:
+      TemplateURL: !Sub >-
+        https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-aws-vpc/templates/aws-vpc.template
+      Parameters:
+        AvailabilityZones: !Join 
+          - ','
+          - !Ref AvailabilityZones
+        KeyPairName: !Ref KeyPairName
+        NumberOfAZs: '2'
+        PrivateSubnet1ACIDR: !Ref PrivateSubnet1CIDR
+        PrivateSubnet2ACIDR: !Ref PrivateSubnet2CIDR
+        PublicSubnet1CIDR: !Ref PublicSubnet1CIDR
+        PublicSubnet2CIDR: !Ref PublicSubnet2CIDR
+        VPCCIDR: !Ref VPCCIDR
   BastionStack:
     DependsOn: VPCStack
     Type: AWS::CloudFormation::Stack
